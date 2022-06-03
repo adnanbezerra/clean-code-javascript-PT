@@ -1,4 +1,4 @@
-# clean-code-javascript
+# clean-code-javascript-PTBR
 
 Esta é apenas uma tradução do guia escrito por Ryan McDermot, que pode ser lido [aqui](https://github.com/ryanmcdermott/clean-code-javascript).
 Note que algumas nomenclaturas foram mantidas em inglês. Isso é proposital: creio que alguns padrões do JavaScript simplesmente não
