@@ -1,12 +1,14 @@
 # clean-code-javascript
 
-**Esta é apenas uma tradução do guia escrito por Ryan McDermot, que pode ser lido [aqui](https://github.com/ryanmcdermott/clean-code-javascript).**
+Esta é apenas uma tradução do guia escrito por Ryan McDermot, que pode ser lido [aqui](https://github.com/ryanmcdermott/clean-code-javascript).
+Note que algumas nomenclaturas foram mantidas em inglês. Isso é proposital: creio que alguns padrões do JavaScript simplesmente não
+devem ser traduzidos, pois assim distancia a leitura dos nomes que os programadores em geral costumam usar para tratar de seus códigos.
 
 ## Tabela de conteúdos
 
 1. [Introdução](#introdução)
-2. [Variables](#variables)
-3. [Functions](#functions)
+2. [Variáveis](#variáveis)
+3. [Funções](#funções)
 4. [Objects and Data Structures](#objects-and-data-structures)
 5. [Classes](#classes)
 6. [SOLID](#solid)
@@ -78,285 +80,277 @@ getUser();
 
 **[⬆ voltar para o topo](#tabela-de-conteúdos)**
 
-### Use searchable names
+### Use nomes pesquisáveis
 
-We will read more code than we will ever write. It's important that the code we
-do write is readable and searchable. By _not_ naming variables that end up
-being meaningful for understanding our program, we hurt our readers.
-Make your names searchable. Tools like
-[buddy.js](https://github.com/danielstjules/buddy.js) and
+Nós vamos ler mais códigos do que escrever. Por isso, é importante que o código que escrevemos
+seja legível e pesquisável. Ao _não_ nomear variáveis de forma significativa para o entendimento
+do nosso programa, nós dificultamos a vida dos nossos leitores.
+
+Faça nomes pesquisáveis. Ferramentas como [buddy.js](https://github.com/danielstjules/buddy.js) e
 [ESLint](https://github.com/eslint/eslint/blob/660e0918933e6e7fede26bc675a0763a6b357c94/docs/rules/no-magic-numbers.md)
-can help identify unnamed constants.
+podem ajudar a identificar constantes sem nomes.
 
-**Bad:**
+**Errado:**
 
 ```javascript
-// What the heck is 86400000 for?
+// Para que é que serve 86400000?
 setTimeout(blastOff, 86400000);
 ```
 
-**Good:**
+**Certo:**
 
 ```javascript
-// Declare them as capitalized named constants.
-const MILLISECONDS_PER_DAY = 60 * 60 * 24 * 1000; //86400000;
+// Declare as constantes com o nome em CAPS LOCK
+const MILISSEGUNDOS_POR_DIA = 60 * 60 * 24 * 1000; //86400000;
 
-setTimeout(blastOff, MILLISECONDS_PER_DAY);
+setTimeout(blastOff, MILISSEGUNDOS_POR_DIA);
 ```
 
-**[⬆ back to top](#table-of-contents)**
+**[⬆ voltar para o topo](#tabela-de-conteúdos)**
 
-### Use explanatory variables
+### Use variáveis explicativas:
 
-**Bad:**
+**Errado:**
 
 ```javascript
-const address = "One Infinite Loop, Cupertino 95014";
-const cityZipCodeRegex = /^[^,\\]+[,\\\s]+(.+?)\s*(\d{5})?$/;
-saveCityZipCode(
-  address.match(cityZipCodeRegex)[1],
-  address.match(cityZipCodeRegex)[2]
+const endereço = "One Infinite Loop, Cupertino 95014";
+const cepDaCidadeRegex = /^[^,\\]+[,\\\s]+(.+?)\s*(\d{5})?$/;
+salvarCepDaCidade(
+  endereço.match(cepDaCidadeRegex)[1],
+  endereço.match(cepDaCidadeRegex)[2]
 );
 ```
 
 **Good:**
 
 ```javascript
-const address = "One Infinite Loop, Cupertino 95014";
-const cityZipCodeRegex = /^[^,\\]+[,\\\s]+(.+?)\s*(\d{5})?$/;
-const [_, city, zipCode] = address.match(cityZipCodeRegex) || [];
-saveCityZipCode(city, zipCode);
+const endereço = "One Infinite Loop, Cupertino 95014";
+const cepDaCidadeRegex = /^[^,\\]+[,\\\s]+(.+?)\s*(\d{5})?$/;
+const [_, city, zipCode] = endereço.match(cepDaCidadeRegex) || [];
+salvarCepDaCidade(city, zipCode);
 ```
 
-**[⬆ back to top](#table-of-contents)**
+**[⬆ voltar para o topo](#tabela-de-conteúdos)**
 
-### Avoid Mental Mapping
+### Procure não fazer mapeamentos mentais
 
-Explicit is better than implicit.
+Explícito é melhor que implícito.
 
-**Bad:**
+**Errado:**
 
 ```javascript
-const locations = ["Austin", "New York", "San Francisco"];
-locations.forEach(l => {
-  doStuff();
-  doSomeOtherStuff();
+const localizações = ["Austin", "New York", "San Francisco"];
+localizações.forEach(l => {
+  façaAquilo();
+  façaIsso();
   // ...
   // ...
   // ...
-  // Wait, what is `l` for again?
+  // Pera, para quẽ serve "l" mesmo?
   dispatch(l);
 });
 ```
 
-**Good:**
+**Certo:**
 
 ```javascript
-const locations = ["Austin", "New York", "San Francisco"];
-locations.forEach(location => {
+const localizações = ["Austin", "New York", "San Francisco"];
+localizações.forEach(localização => {
   doStuff();
   doSomeOtherStuff();
   // ...
   // ...
   // ...
-  dispatch(location);
+  dispatch(localização);
 });
 ```
 
-**[⬆ back to top](#table-of-contents)**
+**[⬆ voltar para o topo](#tabela-de-conteúdos)**
 
-### Don't add unneeded context
+### Não adicione contextos desnecessários.
 
-If your class/object name tells you something, don't repeat that in your
-variable name.
+Se o nome da sua classe/objeto já é significativo, não precisa repetir no nome da variável.
 
-**Bad:**
+**Certo:**
 
 ```javascript
-const Car = {
-  carMake: "Honda",
-  carModel: "Accord",
-  carColor: "Blue"
+const Carro = {
+  fabricanteDoCarro: "Honda",
+  modeloDoCarro: "Accord",
+  corDoCarro: "Blue"
 };
 
-function paintCar(car, color) {
-  car.carColor = color;
+function pintarCarro(car, cor) {
+  car.corDoCarro = cor;
 }
 ```
 
-**Good:**
+**Certo:**
 
 ```javascript
-const Car = {
-  make: "Honda",
-  model: "Accord",
-  color: "Blue"
+const Carro = {
+  fabricante: "Honda",
+  modelo: "Accord",
+  cor: "Blue"
 };
 
-function paintCar(car, color) {
-  car.color = color;
+function paintCar(car, cor) {
+  car.cor = cor;
 }
 ```
 
-**[⬆ back to top](#table-of-contents)**
+**[⬆ voltar para o topo](#tabela-de-conteúdos)**
 
-### Use default arguments instead of short circuiting or conditionals
+### Use default arguments ao invés de short circuitings ou condicionais
 
-Default arguments are often cleaner than short circuiting. Be aware that if you
-use them, your function will only provide default values for `undefined`
-arguments. Other "falsy" values such as `''`, `""`, `false`, `null`, `0`, and
-`NaN`, will not be replaced by a default value.
+Default argumentos normalmente são mais limpos do que short circuitings. Esteja ciente de que, se você usá-los,
+sua função só vai disponibilizar valores para argumentos do tipo `undefined`. Outros valores que também são "falsy",
+como `''`, `false`, `null`, `0` e `NaN`, não serão trocados pelo valor default.
 
-**Bad:**
+**Errado:**
 
 ```javascript
-function createMicrobrewery(name) {
-  const breweryName = name || "Hipster Brew Co.";
+function criarCervejaria(nome) {
+  const nomeDaCervejaria = nome || "Hipster Brew Co.";
   // ...
 }
 ```
 
-**Good:**
+**Certo:**
 
 ```javascript
-function createMicrobrewery(name = "Hipster Brew Co.") {
+function criarCervejaria(nome = "Hipster Brew Co.") {
   // ...
 }
 ```
 
-**[⬆ back to top](#table-of-contents)**
+**[⬆ voltar para o topo](#tabela-de-conteúdos)**
 
-## **Functions**
+## **Funções**
 
-### Function arguments (2 or fewer ideally)
+### Argumentos das funções (dois ou menos, idealmente)
 
-Limiting the amount of function parameters is incredibly important because it
-makes testing your function easier. Having more than three leads to a
-combinatorial explosion where you have to test tons of different cases with
-each separate argument.
+Limitar o número de parâmetros das funções é incrivelmente importante, porque isso facilita e muito a testagem
+das funções. Ter mais de três argumentos leva a uma explosão combinatória onde você tem de testar vários outros casos
+para cada um dos argumentos.
 
-One or two arguments is the ideal case, and three should be avoided if possible.
-Anything more than that should be consolidated. Usually, if you have
-more than two arguments then your function is trying to do too much. In cases
-where it's not, most of the time a higher-level object will suffice as an
-argument.
+Por isso, utilizar apenas um ou dois argumentos é o ideal, e três deve ser evitado, se possível. Qualquer valor a mais
+do que isso deveria ser refatorado. Normalmente, se você tiver mais de dois argumentos, é sinal de que a sua função
+está fazendo mais coisas do que deveria. Em casos em que ela não está, na maioria das vezes passar um único objeto
+como argumento será já o suficiente para resolver a situação.
 
-Since JavaScript allows you to make objects on the fly, without a lot of class
-boilerplate, you can use an object if you are finding yourself needing a
-lot of arguments.
+Como JavaScript tem uma facilidade imensa para criar objetos, sem um caldeirão de classes (como ocorre com Java, por exemplo),
+você poderá usar um objeto se você perceber que está precisando de vários argumentos.
 
-To make it obvious what properties the function expects, you can use the ES2015/ES6
-destructuring syntax. This has a few advantages:
+Para tornar óbvias quais as propriedades de que a função precisa, você pode usar a sintaxe de destructuring do ES2015/ES6.
+Isso traz algumas vantagens:
 
-1. When someone looks at the function signature, it's immediately clear what
-   properties are being used.
-2. It can be used to simulate named parameters.
-3. Destructuring also clones the specified primitive values of the argument
-   object passed into the function. This can help prevent side effects. Note:
-   objects and arrays that are destructured from the argument object are NOT
-   cloned.
-4. Linters can warn you about unused properties, which would be impossible
-   without destructuring.
+1. Quando alguém procura pela assinatura da função, fica imediatamente claro quais as propriedades que estão em uso;
+2. Isso pode ser usado para emular parâmetros com nomes;
+3. Destructuring também clona os valores de tipo primitivo do objeto passado como argumento para a função. Isso pode
+ajudar a prevenir alguns efeitos colaterais. Note: objetos e arrays que são desestruturados do objeto-argumento NÃO são clonados.
+4. A sua IDE pode te avisar caso alguma propriedade não esteja em uso, o que não ocorreria caso você não fizesse destructuring.
 
-**Bad:**
+**Errado:**
 
 ```javascript
-function createMenu(title, body, buttonText, cancellable) {
+function criarMenu(título, corpo, textoDoBotão, cancelável) {
   // ...
 }
 
-createMenu("Foo", "Bar", "Baz", true);
+criarMenu("Foo", "Bar", "Baz", true);
 
 ```
 
-**Good:**
+**Certo:**
 
 ```javascript
-function createMenu({ title, body, buttonText, cancellable }) {
+function criarMenu({ título, corpo, textoDoBotão, cancelável }) {
   // ...
 }
 
 createMenu({
-  title: "Foo",
-  body: "Bar",
-  buttonText: "Baz",
+  título: "Foo",
+  corpo: "Bar",
+  textoDoBotão: "Baz",
   cancellable: true
 });
 ```
 
-**[⬆ back to top](#table-of-contents)**
+**[⬆ voltar para o topo](#tabela-de-conteúdos)**
 
-### Functions should do one thing
+### Funções devem fazer uma única coisa por vez.
 
-This is by far the most important rule in software engineering. When functions
-do more than one thing, they are harder to compose, test, and reason about.
-When you can isolate a function to just one action, it can be refactored
-easily and your code will read much cleaner. If you take nothing else away from
-this guide other than this, you'll be ahead of many developers.
+**Essa é a regra mais importante na engenharia de software.** Quando funções fazem mais de uma coisa,
+elas são mais difíceis de compôr, testar e entender.
 
-**Bad:**
+Quando você consegue isolar uma função de modo que ela faça apenas uma única ação, ela pode ser refatorada mais facilmente
+e o seu código se tornará muito mais limpo. 
+
+É sério, se essa for **a única** coisa que você aprender neste guia, você já estará na frente de muitos desenvolvedores.
+
+**Errado:**
 
 ```javascript
-function emailClients(clients) {
-  clients.forEach(client => {
-    const clientRecord = database.lookup(client);
-    if (clientRecord.isActive()) {
-      email(client);
+function mandarEmails(clientes) {
+  clientes.forEach(cliente => {
+    const dadosDoCliente = database.lookup(cliente);
+    if (dadosDoCliente.ehAtivo()) {
+      mandarEmail(cliente);
     }
   });
 }
 ```
 
-**Good:**
+**Certo:**
 
 ```javascript
-function emailActiveClients(clients) {
-  clients.filter(isActiveClient).forEach(email);
+function mandarEmailParaClientesAtivos(clientes) {
+  clientes.filter(ehClienteAtivo).forEach(mandarEmail);
 }
 
-function isActiveClient(client) {
-  const clientRecord = database.lookup(client);
-  return clientRecord.isActive();
+function ehClienteAtivo(cliente) {
+  const dadosDoCliente = database.lookup(cliente);
+  return dadosDoCliente.ehAtivo();
 }
 ```
 
-**[⬆ back to top](#table-of-contents)**
+**[⬆ voltar para o topo](#tabela-de-conteúdos)**
 
-### Function names should say what they do
+## O nome das funções deve dizer o que elas fazem
 
-**Bad:**
+**Errado:**
 
 ```javascript
-function addToDate(date, month) {
+function adicionarNaData(date, month) {
   // ...
 }
 
-const date = new Date();
+const data = new Date();
 
-// It's hard to tell from the function name what is added
-addToDate(date, 1);
+// É difícil de adivinhar, só pelo nome do função, o que é adicionado
+adicionarNaData(date, 1);
 ```
 
-**Good:**
+**Certo:**
 
 ```javascript
-function addMonthToDate(month, date) {
+function adicionarMesNaData(month, date) {
   // ...
 }
 
-const date = new Date();
-addMonthToDate(1, date);
+const data = new Date();
+adicionarMesNaData(1, date);
 ```
 
-**[⬆ back to top](#table-of-contents)**
+**[⬆ voltar para o topo](#tabela-de-conteúdos)**
 
-### Functions should only be one level of abstraction
+### Funções só devem ter um único nível de abstração
 
-When you have more than one level of abstraction your function is usually
-doing too much. Splitting up functions leads to reusability and easier
-testing.
+Se sua função tiver mais de um nível de abstração, é sinal de que ela está fazendo mais coisas do que deveria.
+Separar em funções diferentes gera uma maior reusabilidade e torna a testagem mais fácil.
 
-**Bad:**
+**Errado:**
 
 ```javascript
 function parseBetterJSAlternative(code) {
@@ -383,7 +377,7 @@ function parseBetterJSAlternative(code) {
 }
 ```
 
-**Good:**
+**Certo:**
 
 ```javascript
 function parseBetterJSAlternative(code) {
@@ -420,7 +414,7 @@ function parse(tokens) {
 }
 ```
 
-**[⬆ back to top](#table-of-contents)**
+**[⬆ voltar para o topo](#tabela-de-conteúdos)**
 
 ### Remove duplicate code
 
@@ -506,7 +500,7 @@ function showEmployeeList(employees) {
 }
 ```
 
-**[⬆ back to top](#table-of-contents)**
+**[⬆ voltar para o topo](#tabela-de-conteúdos)**
 
 ### Set default objects with Object.assign
 
@@ -559,7 +553,7 @@ function createMenu(config) {
 createMenu(menuConfig);
 ```
 
-**[⬆ back to top](#table-of-contents)**
+**[⬆ voltar para o topo](#tabela-de-conteúdos)**
 
 ### Don't use flags as function parameters
 
@@ -589,7 +583,7 @@ function createTempFile(name) {
 }
 ```
 
-**[⬆ back to top](#table-of-contents)**
+**[⬆ voltar para o topo](#tabela-de-conteúdos)**
 
 ### Avoid Side Effects (part 1)
 
@@ -638,7 +632,7 @@ console.log(name); // 'Ryan McDermott';
 console.log(newName); // ['Ryan', 'McDermott'];
 ```
 
-**[⬆ back to top](#table-of-contents)**
+**[⬆ voltar para o topo](#tabela-de-conteúdos)**
 
 ### Avoid Side Effects (part 2)
 
@@ -694,7 +688,7 @@ const addItemToCart = (cart, item) => {
 };
 ```
 
-**[⬆ back to top](#table-of-contents)**
+**[⬆ voltar para o topo](#tabela-de-conteúdos)**
 
 ### Don't write to global functions
 
@@ -728,7 +722,7 @@ class SuperArray extends Array {
 }
 ```
 
-**[⬆ back to top](#table-of-contents)**
+**[⬆ voltar para o topo](#tabela-de-conteúdos)**
 
 ### Favor functional programming over imperative programming
 
@@ -793,7 +787,7 @@ const totalOutput = programmerOutput.reduce(
 );
 ```
 
-**[⬆ back to top](#table-of-contents)**
+**[⬆ voltar para o topo](#tabela-de-conteúdos)**
 
 ### Encapsulate conditionals
 
@@ -817,7 +811,7 @@ if (shouldShowSpinner(fsmInstance, listNodeInstance)) {
 }
 ```
 
-**[⬆ back to top](#table-of-contents)**
+**[⬆ voltar para o topo](#tabela-de-conteúdos)**
 
 ### Avoid negative conditionals
 
@@ -845,7 +839,7 @@ if (isDOMNodePresent(node)) {
 }
 ```
 
-**[⬆ back to top](#table-of-contents)**
+**[⬆ voltar para o topo](#tabela-de-conteúdos)**
 
 ### Avoid conditionals
 
@@ -905,7 +899,7 @@ class Cessna extends Airplane {
 }
 ```
 
-**[⬆ back to top](#table-of-contents)**
+**[⬆ voltar para o topo](#tabela-de-conteúdos)**
 
 ### Avoid type-checking (part 1)
 
@@ -934,7 +928,7 @@ function travelToTexas(vehicle) {
 }
 ```
 
-**[⬆ back to top](#table-of-contents)**
+**[⬆ voltar para o topo](#tabela-de-conteúdos)**
 
 ### Avoid type-checking (part 2)
 
@@ -971,7 +965,7 @@ function combine(val1, val2) {
 }
 ```
 
-**[⬆ back to top](#table-of-contents)**
+**[⬆ voltar para o topo](#tabela-de-conteúdos)**
 
 ### Don't over-optimize
 
@@ -999,7 +993,7 @@ for (let i = 0; i < list.length; i++) {
 }
 ```
 
-**[⬆ back to top](#table-of-contents)**
+**[⬆ voltar para o topo](#tabela-de-conteúdos)**
 
 ### Remove dead code
 
@@ -1033,7 +1027,7 @@ const req = newRequestModule;
 inventoryTracker("apples", req, "www.inventory-awesome.io");
 ```
 
-**[⬆ back to top](#table-of-contents)**
+**[⬆ voltar para o topo](#tabela-de-conteúdos)**
 
 ## **Objects and Data Structures**
 
@@ -1096,7 +1090,7 @@ const account = makeBankAccount();
 account.setBalance(100);
 ```
 
-**[⬆ back to top](#table-of-contents)**
+**[⬆ voltar para o topo](#tabela-de-conteúdos)**
 
 ### Make objects have private members
 
@@ -1136,7 +1130,7 @@ delete employee.name;
 console.log(`Employee name: ${employee.getName()}`); // Employee name: John Doe
 ```
 
-**[⬆ back to top](#table-of-contents)**
+**[⬆ voltar para o topo](#tabela-de-conteúdos)**
 
 ## **Classes**
 
@@ -1223,7 +1217,7 @@ class Human extends Mammal {
 }
 ```
 
-**[⬆ back to top](#table-of-contents)**
+**[⬆ voltar para o topo](#tabela-de-conteúdos)**
 
 ### Use method chaining
 
@@ -1303,7 +1297,7 @@ class Car {
 const car = new Car("Ford", "F-150", "red").setColor("pink").save();
 ```
 
-**[⬆ back to top](#table-of-contents)**
+**[⬆ voltar para o topo](#tabela-de-conteúdos)**
 
 ### Prefer composition over inheritance
 
@@ -1373,7 +1367,7 @@ class Employee {
 }
 ```
 
-**[⬆ back to top](#table-of-contents)**
+**[⬆ voltar para o topo](#tabela-de-conteúdos)**
 
 ## **SOLID**
 
@@ -1435,7 +1429,7 @@ class UserSettings {
 }
 ```
 
-**[⬆ back to top](#table-of-contents)**
+**[⬆ voltar para o topo](#tabela-de-conteúdos)**
 
 ### Open/Closed Principle (OCP)
 
@@ -1526,7 +1520,7 @@ class HttpRequester {
 }
 ```
 
-**[⬆ back to top](#table-of-contents)**
+**[⬆ voltar para o topo](#tabela-de-conteúdos)**
 
 ### Liskov Substitution Principle (LSP)
 
@@ -1645,7 +1639,7 @@ const shapes = [new Rectangle(4, 5), new Rectangle(4, 5), new Square(5)];
 renderLargeShapes(shapes);
 ```
 
-**[⬆ back to top](#table-of-contents)**
+**[⬆ voltar para o topo](#tabela-de-conteúdos)**
 
 ### Interface Segregation Principle (ISP)
 
@@ -1723,7 +1717,7 @@ const $ = new DOMTraverser({
 });
 ```
 
-**[⬆ back to top](#table-of-contents)**
+**[⬆ voltar para o topo](#tabela-de-conteúdos)**
 
 ### Dependency Inversion Principle (DIP)
 
@@ -1826,7 +1820,7 @@ const inventoryTracker = new InventoryTracker(
 inventoryTracker.requestItems();
 ```
 
-**[⬆ back to top](#table-of-contents)**
+**[⬆ voltar para o topo](#tabela-de-conteúdos)**
 
 ## **Testing**
 
@@ -1897,7 +1891,7 @@ describe("MomentJS", () => {
 });
 ```
 
-**[⬆ back to top](#table-of-contents)**
+**[⬆ voltar para o topo](#tabela-de-conteúdos)**
 
 ## **Concurrency**
 
@@ -1948,7 +1942,7 @@ get("https://en.wikipedia.org/wiki/Robert_Cecil_Martin")
   });
 ```
 
-**[⬆ back to top](#table-of-contents)**
+**[⬆ voltar para o topo](#tabela-de-conteúdos)**
 
 ### Async/Await are even cleaner than Promises
 
@@ -1997,7 +1991,7 @@ async function getCleanCodeArticle() {
 getCleanCodeArticle()
 ```
 
-**[⬆ back to top](#table-of-contents)**
+**[⬆ voltar para o topo](#tabela-de-conteúdos)**
 
 ## **Error Handling**
 
@@ -2076,7 +2070,7 @@ getdata()
   });
 ```
 
-**[⬆ back to top](#table-of-contents)**
+**[⬆ voltar para o topo](#tabela-de-conteúdos)**
 
 ## **Formatting**
 
@@ -2127,7 +2121,7 @@ class Animal {}
 class Alpaca {}
 ```
 
-**[⬆ back to top](#table-of-contents)**
+**[⬆ voltar para o topo](#tabela-de-conteúdos)**
 
 ### Function callers and callees should be close
 
@@ -2215,7 +2209,7 @@ const review = new PerformanceReview(employee);
 review.perfReview();
 ```
 
-**[⬆ back to top](#table-of-contents)**
+**[⬆ voltar para o topo](#tabela-de-conteúdos)**
 
 ## **Comments**
 
@@ -2262,7 +2256,7 @@ function hashIt(data) {
 }
 ```
 
-**[⬆ back to top](#table-of-contents)**
+**[⬆ voltar para o topo](#tabela-de-conteúdos)**
 
 ### Don't leave commented out code in your codebase
 
@@ -2283,7 +2277,7 @@ doStuff();
 doStuff();
 ```
 
-**[⬆ back to top](#table-of-contents)**
+**[⬆ voltar para o topo](#tabela-de-conteúdos)**
 
 ### Don't have journal comments
 
@@ -2312,7 +2306,7 @@ function combine(a, b) {
 }
 ```
 
-**[⬆ back to top](#table-of-contents)**
+**[⬆ voltar para o topo](#tabela-de-conteúdos)**
 
 ### Avoid positional markers
 
@@ -2351,7 +2345,7 @@ const actions = function() {
 };
 ```
 
-**[⬆ back to top](#table-of-contents)**
+**[⬆ voltar para o topo](#tabela-de-conteúdos)**
 
 ## Translation
 
@@ -2381,4 +2375,4 @@ This is also available in other languages:
 - ![ua](https://raw.githubusercontent.com/gosquared/flags/master/flags/flags/shiny/24/Ukraine.png) **Ukrainian**: [mindfr1k/clean-code-javascript-ua](https://github.com/mindfr1k/clean-code-javascript-ua)
 - ![vi](https://raw.githubusercontent.com/gosquared/flags/master/flags/flags/shiny/24/Vietnam.png) **Vietnamese**: [hienvd/clean-code-javascript/](https://github.com/hienvd/clean-code-javascript/)
 
-**[⬆ back to top](#table-of-contents)**
+**[⬆ voltar para o topo](#tabela-de-conteúdos)**
