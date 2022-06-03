@@ -17,7 +17,7 @@ devem ser traduzidos, pois assim distancia a leitura dos nomes que os programado
 9. [Error Handling](#error-handling)
 10. [Formatting](#formatting)
 11. [Comments](#comments)
-12. [Translation](#translation)
+12. [Traduções](#traduções)
 
 ## Introdução
 
@@ -30,13 +30,13 @@ adaptado para o JavaScript. Isso não é um style guide. É um guia para produzi
 [legíveis, reusáveis, e refatoráveis](https://github.com/ryanmcdermott/3rs-of-software-architecture) em JavaScript.
 
 Nem todo princípio aqui deve ser seguido estritamente, e ainda menos devem ser universalmente concordados.
-Estes são princípios-guia e nada mais, mas eles são codificados através de muitos anos de experiência coletiva
+Estes são princípios-guia e nada mais, mas todos eles foram codificados através de muitos anos de experiência coletiva
 dos autores da obra _Clean Code_.
 
 Nosso trabalho de engenharia de software tem só um pouco mais de 50 anos de idade, e nós ainda estamos
-aprendendo muito. Quando a arquitetura de software tiver a idade da arquitetura comum, então talvez ela
-tenha regras mais difíceis de seguirem. Por enquanto, deixemos que esses guias sejam apenas um caminho para
-chegar garantir a qualidade do código JavaScript que tanto você quanto a sua equipe irão traduzir.
+aprendendo muito. Quando a arquitetura de software tiver quase a idade da arquitetura comum, então talvez ela
+tenha regras mais estritas a se seguir. Por enquanto, deixemos que esses guias sejam apenas um caminho para
+garantir a qualidade do código JavaScript que tanto você quanto a sua equipe irão produzir.
 
 Mais uma coisa: saber isso tudo não vai te tornar um melhor engenheiro de software instantaneamente, e
 trabalhar com elas por anos não vai garantir que você não vai cometer erros. Todo pedaço de código começa
@@ -86,9 +86,9 @@ Nós vamos ler mais códigos do que escrever. Por isso, é importante que o cód
 seja legível e pesquisável. Ao _não_ nomear variáveis de forma significativa para o entendimento
 do nosso programa, nós dificultamos a vida dos nossos leitores.
 
-Faça nomes pesquisáveis. Ferramentas como [buddy.js](https://github.com/danielstjules/buddy.js) e
+Por isso, faça nomes pesquisáveis. Ferramentas como [buddy.js](https://github.com/danielstjules/buddy.js) e
 [ESLint](https://github.com/eslint/eslint/blob/660e0918933e6e7fede26bc675a0763a6b357c94/docs/rules/no-magic-numbers.md)
-podem ajudar a identificar constantes sem nomes.
+podem ajudar a identificar constantes sem bons nomes, por exemplo.
 
 **Errado:**
 
@@ -121,7 +121,7 @@ salvarCepDaCidade(
 );
 ```
 
-**Good:**
+**Certo:**
 
 ```javascript
 const endereço = "One Infinite Loop, Cupertino 95014";
@@ -146,7 +146,7 @@ localizações.forEach(l => {
   // ...
   // ...
   // ...
-  // Pera, para quẽ serve "l" mesmo?
+  // Pera, para quê serve "l" mesmo?
   dispatch(l);
 });
 ```
@@ -205,7 +205,7 @@ function paintCar(car, cor) {
 
 Default argumentos normalmente são mais limpos do que short circuitings. Esteja ciente de que, se você usá-los,
 sua função só vai disponibilizar valores para argumentos do tipo `undefined`. Outros valores que também são "falsy",
-como `''`, `false`, `null`, `0` e `NaN`, não serão trocados pelo valor default.
+como `''`, `false`, `null`, `0` e `NaN`, **não** serão trocados pelo valor default.
 
 **Errado:**
 
@@ -230,9 +230,9 @@ function criarCervejaria(nome = "Hipster Brew Co.") {
 
 ### Argumentos das funções (dois ou menos, idealmente)
 
-Limitar o número de parâmetros das funções é incrivelmente importante, porque isso facilita e muito a testagem
-das funções. Ter mais de três argumentos leva a uma explosão combinatória onde você tem de testar vários outros casos
-para cada um dos argumentos.
+Limitar o número de parâmetros das funções é incrivelmente importante porque isso facilita e muito a testagem
+das funções. Ter mais de três argumentos leva a uma explosão combinatória onde você tem de testar muitos casos
+para cada um dos argumentos de sua função.
 
 Por isso, utilizar apenas um ou dois argumentos é o ideal, e três deve ser evitado, se possível. Qualquer valor a mais
 do que isso deveria ser refatorado. Normalmente, se você tiver mais de dois argumentos, é sinal de que a sua função
@@ -249,7 +249,7 @@ Isso traz algumas vantagens:
 2. Isso pode ser usado para emular parâmetros com nomes;
 3. Destructuring também clona os valores de tipo primitivo do objeto passado como argumento para a função. Isso pode
 ajudar a prevenir alguns efeitos colaterais. Note: objetos e arrays que são desestruturados do objeto-argumento NÃO são clonados.
-4. A sua IDE pode te avisar caso alguma propriedade não esteja em uso, o que não ocorreria caso você não fizesse destructuring.
+4. O linter pode te avisar caso alguma propriedade não esteja em uso, o que não ocorreria caso você não fizesse destructuring.
 
 **Errado:**
 
@@ -317,7 +317,7 @@ function ehClienteAtivo(cliente) {
 
 **[⬆ voltar para o topo](#tabela-de-conteúdos)**
 
-## O nome das funções deve dizer o que elas fazem
+### O nome das funções deve dizer o que elas fazem
 
 **Errado:**
 
@@ -416,153 +416,156 @@ function parse(tokens) {
 
 **[⬆ voltar para o topo](#tabela-de-conteúdos)**
 
-### Remove duplicate code
+### Remova código duplicado
 
-Do your absolute best to avoid duplicate code. Duplicate code is bad because it
-means that there's more than one place to alter something if you need to change
-some logic.
+Dê o melhor de si para evitar código duplicado. Fazer código duplicado é péssimo para você, porque,
+caso você precise alterar alguma lógica, será necessário mudar o seu código em mais de um lugar.
 
-Imagine if you run a restaurant and you keep track of your inventory: all your
-tomatoes, onions, garlic, spices, etc. If you have multiple lists that
-you keep this on, then all have to be updated when you serve a dish with
-tomatoes in them. If you only have one list, there's only one place to update!
+Imagine que você é dono de um restaurante e está organizando o seu estoque: todo o seu tomate, cebola,
+alho, temperos etc. Se você tiver várias listas para manter a contagem da quantidade de cada produto, você
+terá que atualizar *todas* elas quando for servir um prato com tomates. Se você tiver uma só lista, só
+precisará atualizar em um lugar por vez!
 
-Oftentimes you have duplicate code because you have two or more slightly
-different things, that share a lot in common, but their differences force you
-to have two or more separate functions that do much of the same things. Removing
-duplicate code means creating an abstraction that can handle this set of
-different things with just one function/module/class.
+De vez em quando, você acaba escrevendo código duplicado por que você tem duas ou mais implementações que são só um pouco
+diferentes, mas que têm muita coisa em comum, sendo que essas diferenças te obrigam a criar duas funções diferentes
+que farão quase a mesma coisa. 
 
-Getting the abstraction right is critical, that's why you should follow the
-SOLID principles laid out in the _Classes_ section. Bad abstractions can be
-worse than duplicate code, so be careful! Having said this, if you can make
-a good abstraction, do it! Don't repeat yourself, otherwise you'll find yourself
-updating multiple places anytime you want to change one thing.
+Remover código duplicado significa criar uma abstração que poderá cuidar dessas pequenas diferenças fazendo
+uso de apenas uma função, módulo ou classe.
 
-**Bad:**
+Fazer a abstração da forma correta é crítico, e é por isso que você deve seguir os princípios da SOLID que foram deixados
+na seção _Classes_. 
+
+Más abstrações podem ser piores do que código duplicado. Portanto, tome cuidado! Com isso dito, se você puder fazer
+uma boa abstração, faça isso. Não se repita, do contrário você vai se ver atualizando vários lugares toda vez
+que quiser mudar uma mesma coisa.
+
+**Errado:**
 
 ```javascript
 function showDeveloperList(developers) {
   developers.forEach(developer => {
-    const expectedSalary = developer.calculateExpectedSalary();
-    const experience = developer.getExperience();
+    const salarioEsperado = developer.calcularSalarioEsperado();
+    const experiencia = developer.getExperiencia();
     const githubLink = developer.getGithubLink();
-    const data = {
-      expectedSalary,
-      experience,
+    const informacoes = {
+      salarioEsperado,
+      experiencia,
       githubLink
     };
 
-    render(data);
+    render(informacoes);
   });
 }
 
-function showManagerList(managers) {
-  managers.forEach(manager => {
-    const expectedSalary = manager.calculateExpectedSalary();
-    const experience = manager.getExperience();
-    const portfolio = manager.getMBAProjects();
-    const data = {
-      expectedSalary,
-      experience,
+function showListaDeGerentes(gerentes) {
+  gerentes.forEach(gerente => {
+    const salarioEsperado = gerente.calcularSalarioEsperado();
+    const experiencia = gerente.getexperiencia();
+    const portfolio = gerente.getMBAProjects();
+    const informacoes = {
+      salarioEsperado,
+      experiencia,
       portfolio
     };
 
-    render(data);
+    render(informacoes);
   });
 }
 ```
 
-**Good:**
+**Certo:**
 
 ```javascript
-function showEmployeeList(employees) {
-  employees.forEach(employee => {
-    const expectedSalary = employee.calculateExpectedSalary();
-    const experience = employee.getExperience();
+function showListaDeEmpregados(empregados) {
+  empregados.forEach(empregado => {
+    const salarioEsperado = empregado.calcularSalarioEsperado();
+    const experiencia = empregado.getexperiencia();
 
-    const data = {
-      expectedSalary,
-      experience
+    const informacoes = {
+      salarioEsperado,
+      experiencia
     };
 
-    switch (employee.type) {
-      case "manager":
-        data.portfolio = employee.getMBAProjects();
+    switch (empregado.type) {
+      case "gerente":
+        informacoes.portfolio = empregado.getMBAProjects();
         break;
       case "developer":
-        data.githubLink = employee.getGithubLink();
+        informacoes.githubLink = empregado.getGithubLink();
         break;
     }
 
-    render(data);
+    render(informacoes);
   });
 }
 ```
 
 **[⬆ voltar para o topo](#tabela-de-conteúdos)**
 
-### Set default objects with Object.assign
+### Crie objetos com valores default usando Object.assign
 
-**Bad:**
+**Errado:**
 
 ```javascript
 const menuConfig = {
-  title: null,
-  body: "Bar",
-  buttonText: null,
-  cancellable: true
+  titulo: null,
+  corpo: "Bar",
+  textoDoBotao: null,
+  cancelavel: true
 };
 
-function createMenu(config) {
-  config.title = config.title || "Foo";
-  config.body = config.body || "Bar";
-  config.buttonText = config.buttonText || "Baz";
-  config.cancellable =
-    config.cancellable !== undefined ? config.cancellable : true;
+function criarMenu(config) {
+  config.titulo = config.titulo || "Foo";
+  config.corpo = config.corpo || "Bar";
+  config.textoDoBotao = config.textoDoBotao || "Baz";
+  config.cancelavel =
+    config.cancelavel !== undefined ? config.cancelavel : true;
 }
 
-createMenu(menuConfig);
+criarMenu(menuConfig);
 ```
 
-**Good:**
+**Certo:**
 
 ```javascript
 const menuConfig = {
-  title: "Order",
-  // User did not include 'body' key
-  buttonText: "Send",
-  cancellable: true
+  titulo: "Pedido",
+  // Note que a chave 'corpo' não está presente
+  textoDoBotao: "Send",
+  cancelavel: true
 };
 
-function createMenu(config) {
+function criarMenu(config) {
   let finalConfig = Object.assign(
     {
-      title: "Foo",
-      body: "Bar",
-      buttonText: "Baz",
-      cancellable: true
+      titulo: "Foo",
+      corpo: "Bar",
+      textoDoBotao: "Baz",
+      cancelavel: true
     },
     config
   );
   return finalConfig
-  // config now equals: {title: "Order", body: "Bar", buttonText: "Send", cancellable: true}
+  // config now equals: {titulo: "Order", corpo: "Bar", textoDoBotao: "Send", cancelavel: true}
   // ...
 }
 
-createMenu(menuConfig);
+criarMenu(menuConfig);
 ```
 
 **[⬆ voltar para o topo](#tabela-de-conteúdos)**
 
-### Don't use flags as function parameters
+### Não use flags como parâmetros para funções
 
-Flags tell your user that this function does more than one thing. Functions should do one thing. Split out your functions if they are following different code paths based on a boolean.
+Flags dizem para o seu usuário que essa função faz mais de uma coisa. Funções devem fazer apenas uma coisa por vez.
 
-**Bad:**
+Separe suas funções em duas se elas estão seguindo rotas diferentes de código baseadas em um boolean passado como parâmetro.
+
+**Errado:**
 
 ```javascript
-function createFile(name, temp) {
+function criarArquivo(name, temp) {
   if (temp) {
     fs.create(`./temp/${name}`);
   } else {
@@ -571,82 +574,82 @@ function createFile(name, temp) {
 }
 ```
 
-**Good:**
+**Certo:**
 
 ```javascript
-function createFile(name) {
+function criarArquivo(name) {
   fs.create(name);
 }
 
-function createTempFile(name) {
-  createFile(`./temp/${name}`);
+function criarArquivoNoTemp(name) {
+  criarArquivo(`./temp/${name}`);
 }
 ```
 
 **[⬆ voltar para o topo](#tabela-de-conteúdos)**
 
-### Avoid Side Effects (part 1)
+### Evite funções com efeitos colaterais (parte 1)
 
-A function produces a side effect if it does anything other than take a value in
-and return another value or values. A side effect could be writing to a file,
-modifying some global variable, or accidentally wiring all your money to a
-stranger.
+Uma função produz efeito colateral se ela faz algo além de receber um valor e returnar outro valor.
+Um efeito colateral poderia ser escrever um arquivo, modificar alguma variável global, ou acidentalmente
+entregar todo o seu dinheiro para um estranho.
 
-Now, you do need to have side effects in a program on occasion. Like the previous
-example, you might need to write to a file. What you want to do is to
-centralize where you are doing this. Don't have several functions and classes
-that write to a particular file. Have one service that does it. One and only one.
+Perceba: de vez em quando você precisa que uma função tenha efeitos colaterais. Como no exemplo do tópico anterior,
+pode ser que você tenha que escrever em um arquivo. O que você precisa saber é aprender como centralizar *onde*
+você está fazendo isso. 
 
-The main point is to avoid common pitfalls like sharing state between objects
-without any structure, using mutable data types that can be written to by anything,
-and not centralizing where your side effects occur. If you can do this, you will
-be happier than the vast majority of other programmers.
+Ou seja: não é bom ter *muitas* funções que escrevam em um arquivo particular. Tenha **apenas um** serviço que faça
+isso. Um e apenas um.
 
-**Bad:**
+O ponto principal é evitar erros comuns como compartilhar estados entre objetos sem nenhuma estrutura,
+usar tipos de dados mutáveis que podem ser escritos por qualquer coisa, e não centralizar onde seus
+efeitos colaterais ocorrem. Se você souber fazer isso, você será mais feliz que a vasta maioria dos outros programadores.
+
+**Errado:**
 
 ```javascript
-// Global variable referenced by following function.
-// If we had another function that used this name, now it'd be an array and it could break it.
-let name = "Ryan McDermott";
+// Variável global referenciada pela função a seguir.
+// Se tivéssemos mais de uma função usando esse nome, agora isso se transformaria em um array, e toda a estrutura poderia quebrar
+let nome = "Ryan McDermott";
 
-function splitIntoFirstAndLastName() {
-  name = name.split(" ");
+function separarEmNomeESobrenome() {
+  nome = nome.split(" ");
 }
 
-splitIntoFirstAndLastName();
+separarEmNomeESobrenome();
 
-console.log(name); // ['Ryan', 'McDermott'];
+console.log(nome); // ['Ryan', 'McDermott'];
 ```
 
-**Good:**
+**Certo:**
 
 ```javascript
-function splitIntoFirstAndLastName(name) {
-  return name.split(" ");
+function separarEmNomeESobrenome(nome) {
+  return nome.split(" ");
 }
 
-const name = "Ryan McDermott";
-const newName = splitIntoFirstAndLastName(name);
+const nome = "Ryan McDermott";
+const novoNome = separarEmNomeESobrenome(nome);
 
-console.log(name); // 'Ryan McDermott';
-console.log(newName); // ['Ryan', 'McDermott'];
+console.log(nome); // 'Ryan McDermott';
+console.log(novoNome); // ['Ryan', 'McDermott'];
 ```
 
 **[⬆ voltar para o topo](#tabela-de-conteúdos)**
 
-### Avoid Side Effects (part 2)
+### Evite efeitos colaterais (parte 2)
 
-In JavaScript, some values are unchangeable (immutable) and some are changeable 
-(mutable). Objects and arrays are two kinds of mutable values so it's important 
-to handle them carefully when they're passed as parameters to a function. A 
-JavaScript function can change an object's properties or alter the contents of 
-an array which could easily cause bugs elsewhere.
+Em JavaScript, alguns valores são imutáveis e outros são mutáveis. Objetos e arrays são dois tipos
+de valores mudáveis, e, por isso, é importante usá-los com muito cuidado ao passá-los como parâmetros
+de uma função. Uma função de JavaScript pode mudar as propriedades de um objeto ou alterar os conteúdos
+de um array, o que pode facilmente causar bugs em outros lugars.
 
-Suppose there's a function that accepts an array parameter representing a 
-shopping cart. If the function makes a change in that shopping cart array - 
-by adding an item to purchase, for example - then any other function that 
-uses that same `cart` array will be affected by this addition. That may be 
-great, however it could also be bad. Let's imagine a bad situation:
+Suponha que tenha uma função que aceite um array como parâmetro, e que ele representa um carrinho de compras.
+Se a função faz uma mundaça neste array - adicionando um item para a compra, por exemplo - então qualquer outra
+função que usa o mesmo array `carrinho` será afetada por essa adição. Isso pode ser bom, mas também pode
+ser ruim. 
+
+Imaginemos uma situação em que isso não é bom:
 
 The user clicks the "Purchase" button which calls a `purchase` function that
 spawns a network request and sends the `cart` array to the server. Because
@@ -1099,24 +1102,24 @@ This can be accomplished through closures (for ES5 and below).
 **Bad:**
 
 ```javascript
-const Employee = function(name) {
+const empregado = function(name) {
   this.name = name;
 };
 
-Employee.prototype.getName = function getName() {
+empregado.prototype.getName = function getName() {
   return this.name;
 };
 
-const employee = new Employee("John Doe");
-console.log(`Employee name: ${employee.getName()}`); // Employee name: John Doe
-delete employee.name;
-console.log(`Employee name: ${employee.getName()}`); // Employee name: undefined
+const empregado = new empregado("John Doe");
+console.log(`empregado name: ${empregado.getName()}`); // empregado name: John Doe
+delete empregado.name;
+console.log(`empregado name: ${empregado.getName()}`); // empregado name: undefined
 ```
 
 **Good:**
 
 ```javascript
-function makeEmployee(name) {
+function makeempregado(name) {
   return {
     getName() {
       return name;
@@ -1124,10 +1127,10 @@ function makeEmployee(name) {
   };
 }
 
-const employee = makeEmployee("John Doe");
-console.log(`Employee name: ${employee.getName()}`); // Employee name: John Doe
-delete employee.name;
-console.log(`Employee name: ${employee.getName()}`); // Employee name: John Doe
+const empregado = makeempregado("John Doe");
+console.log(`empregado name: ${empregado.getName()}`); // empregado name: John Doe
+delete empregado.name;
+console.log(`empregado name: ${empregado.getName()}`); // empregado name: John Doe
 ```
 
 **[⬆ voltar para o topo](#tabela-de-conteúdos)**
@@ -1321,7 +1324,7 @@ makes more sense than composition:
 **Bad:**
 
 ```javascript
-class Employee {
+class empregado {
   constructor(name, email) {
     this.name = name;
     this.email = email;
@@ -1330,8 +1333,8 @@ class Employee {
   // ...
 }
 
-// Bad because Employees "have" tax data. EmployeeTaxData is not a type of Employee
-class EmployeeTaxData extends Employee {
+// Bad because empregados "have" tax data. empregadoTaxData is not a type of empregado
+class empregadoTaxData extends empregado {
   constructor(ssn, salary) {
     super();
     this.ssn = ssn;
@@ -1345,7 +1348,7 @@ class EmployeeTaxData extends Employee {
 **Good:**
 
 ```javascript
-class EmployeeTaxData {
+class empregadoTaxData {
   constructor(ssn, salary) {
     this.ssn = ssn;
     this.salary = salary;
@@ -1354,14 +1357,14 @@ class EmployeeTaxData {
   // ...
 }
 
-class Employee {
+class empregado {
   constructor(name, email) {
     this.name = name;
     this.email = email;
   }
 
   setTaxData(ssn, salary) {
-    this.taxData = new EmployeeTaxData(ssn, salary);
+    this.taxData = new empregadoTaxData(ssn, salary);
   }
   // ...
 }
@@ -2133,16 +2136,16 @@ top-to-bottom, like a newspaper. Because of this, make your code read that way.
 
 ```javascript
 class PerformanceReview {
-  constructor(employee) {
-    this.employee = employee;
+  constructor(empregado) {
+    this.empregado = empregado;
   }
 
   lookupPeers() {
-    return db.lookup(this.employee, "peers");
+    return db.lookup(this.empregado, "peers");
   }
 
-  lookupManager() {
-    return db.lookup(this.employee, "manager");
+  lookupgerente() {
+    return db.lookup(this.empregado, "gerente");
   }
 
   getPeerReviews() {
@@ -2152,12 +2155,12 @@ class PerformanceReview {
 
   perfReview() {
     this.getPeerReviews();
-    this.getManagerReview();
+    this.getgerenteReview();
     this.getSelfReview();
   }
 
-  getManagerReview() {
-    const manager = this.lookupManager();
+  getgerenteReview() {
+    const gerente = this.lookupgerente();
   }
 
   getSelfReview() {
@@ -2165,7 +2168,7 @@ class PerformanceReview {
   }
 }
 
-const review = new PerformanceReview(employee);
+const review = new PerformanceReview(empregado);
 review.perfReview();
 ```
 
@@ -2173,13 +2176,13 @@ review.perfReview();
 
 ```javascript
 class PerformanceReview {
-  constructor(employee) {
-    this.employee = employee;
+  constructor(empregado) {
+    this.empregado = empregado;
   }
 
   perfReview() {
     this.getPeerReviews();
-    this.getManagerReview();
+    this.getgerenteReview();
     this.getSelfReview();
   }
 
@@ -2189,15 +2192,15 @@ class PerformanceReview {
   }
 
   lookupPeers() {
-    return db.lookup(this.employee, "peers");
+    return db.lookup(this.empregado, "peers");
   }
 
-  getManagerReview() {
-    const manager = this.lookupManager();
+  getgerenteReview() {
+    const gerente = this.lookupgerente();
   }
 
-  lookupManager() {
-    return db.lookup(this.employee, "manager");
+  lookupgerente() {
+    return db.lookup(this.empregado, "gerente");
   }
 
   getSelfReview() {
@@ -2205,7 +2208,7 @@ class PerformanceReview {
   }
 }
 
-const review = new PerformanceReview(employee);
+const review = new PerformanceReview(empregado);
 review.perfReview();
 ```
 
@@ -2347,9 +2350,9 @@ const actions = function() {
 
 **[⬆ voltar para o topo](#tabela-de-conteúdos)**
 
-## Translation
+## Traduções
 
-This is also available in other languages:
+Este artigo também está disponível em outros idiomas:
 
 - ![am](https://raw.githubusercontent.com/gosquared/flags/master/flags/flags/shiny/24/Armenia.png) **Armenian**: [hanumanum/clean-code-javascript/](https://github.com/hanumanum/clean-code-javascript)
 - ![bd](https://raw.githubusercontent.com/gosquared/flags/master/flags/flags/shiny/24/Bangladesh.png) **Bangla(বাংলা)**: [InsomniacSabbir/clean-code-javascript/](https://github.com/InsomniacSabbir/clean-code-javascript/)
