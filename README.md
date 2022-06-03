@@ -1,7 +1,6 @@
 # clean-code-javascript
 
-## Nota:
-### Esta é apenas uma tradução do guia escrito por Ryan McDermot, que pode ser lido [aqui](https://github.com/ryanmcdermott/clean-code-javascript).
+**Esta é apenas uma tradução do guia escrito por Ryan McDermot, que pode ser lido [aqui](https://github.com/ryanmcdermott/clean-code-javascript).**
 
 ## Tabela de conteúdos
 
