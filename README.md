@@ -1,8 +1,11 @@
 # clean-code-javascript
 
-## Table of Contents
+## Nota:
+### Esta é apenas uma tradução do guia escrito por Ryan McDermot, que pode ser lido [aqui](https://github.com/ryanmcdermott/clean-code-javascript).
 
-1. [Introduction](#introduction)
+## Tabela de conteúdos
+
+1. [Introdução](#introdução)
 2. [Variables](#variables)
 3. [Functions](#functions)
 4. [Objects and Data Structures](#objects-and-data-structures)
@@ -15,55 +18,52 @@
 11. [Comments](#comments)
 12. [Translation](#translation)
 
-## Introduction
+## Introdução
 
 ![Humorous image of software quality estimation as a count of how many expletives
 you shout when reading code](https://www.osnews.com/images/comics/wtfm.jpg)
 
-Software engineering principles, from Robert C. Martin's book
-[_Clean Code_](https://www.amazon.com/Clean-Code-Handbook-Software-Craftsmanship/dp/0132350882),
-adapted for JavaScript. This is not a style guide. It's a guide to producing
-[readable, reusable, and refactorable](https://github.com/ryanmcdermott/3rs-of-software-architecture) software in JavaScript.
+Princípios da engenharia de software, do livro
+[_Clean Code_](https://www.amazon.com/Clean-Code-Handbook-Software-Craftsmanship/dp/0132350882), de Robert C. Martin,
+adaptado para o JavaScript. Isso não é um style guide. É um guia para produzir softwares
+[legíveis, reusáveis, e refatoráveis](https://github.com/ryanmcdermott/3rs-of-software-architecture) em JavaScript.
 
-Not every principle herein has to be strictly followed, and even fewer will be
-universally agreed upon. These are guidelines and nothing more, but they are
-ones codified over many years of collective experience by the authors of
-_Clean Code_.
+Nem todo princípio aqui deve ser seguido estritamente, e ainda menos devem ser universalmente concordados.
+Estes são princípios-guia e nada mais, mas eles são codificados através de muitos anos de experiência coletiva
+dos autores da obra _Clean Code_.
 
-Our craft of software engineering is just a bit over 50 years old, and we are
-still learning a lot. When software architecture is as old as architecture
-itself, maybe then we will have harder rules to follow. For now, let these
-guidelines serve as a touchstone by which to assess the quality of the
-JavaScript code that you and your team produce.
+Nosso trabalho de engenharia de software tem só um pouco mais de 50 anos de idade, e nós ainda estamos
+aprendendo muito. Quando a arquitetura de software tiver a idade da arquitetura comum, então talvez ela
+tenha regras mais difíceis de seguirem. Por enquanto, deixemos que esses guias sejam apenas um caminho para
+chegar garantir a qualidade do código JavaScript que tanto você quanto a sua equipe irão traduzir.
 
-One more thing: knowing these won't immediately make you a better software
-developer, and working with them for many years doesn't mean you won't make
-mistakes. Every piece of code starts as a first draft, like wet clay getting
-shaped into its final form. Finally, we chisel away the imperfections when
-we review it with our peers. Don't beat yourself up for first drafts that need
-improvement. Beat up the code instead!
+Mais uma coisa: saber isso tudo não vai te tornar um melhor engenheiro de software instantaneamente, e
+trabalhar com elas por anos não vai garantir que você não vai cometer erros. Todo pedaço de código começa
+com um desenho inicial, como argila molhada sendo modelada na sua forma final. Finalmente, nós raspamos
+as imperfeições quando fazemos a revisão com nossos colegas. Não se abata por causa dos primeiros projetos
+que precisarem de melhorias. Bata no código no lugar disso!
 
-## **Variables**
+## **Variáveis**
 
-### Use meaningful and pronounceable variable names
+### Use nomes significativos e pronunciáveis
 
-**Bad:**
+**Errado:**
 
 ```javascript
 const yyyymmdstr = moment().format("YYYY/MM/DD");
 ```
 
-**Good:**
+**Certo:**
 
 ```javascript
-const currentDate = moment().format("YYYY/MM/DD");
+const dataAtual = moment().format("YYYY/MM/DD");
 ```
 
-**[⬆ back to top](#table-of-contents)**
+**[⬆ voltar para o topo](#tabela-de-conteúdos)**
 
-### Use the same vocabulary for the same type of variable
+### Use o mesmo vocabulário para o mesmo tipo de variável
 
-**Bad:**
+**Errado:**
 
 ```javascript
 getUserInfo();
@@ -71,13 +71,13 @@ getClientData();
 getCustomerRecord();
 ```
 
-**Good:**
+**Certo:**
 
 ```javascript
 getUser();
 ```
 
-**[⬆ back to top](#table-of-contents)**
+**[⬆ voltar para o topo](#tabela-de-conteúdos)**
 
 ### Use searchable names
 
