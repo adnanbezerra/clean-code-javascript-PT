@@ -651,61 +651,65 @@ ser ruim.
 
 Imaginemos uma situação em que isso não é bom:
 
-The user clicks the "Purchase" button which calls a `purchase` function that
-spawns a network request and sends the `cart` array to the server. Because
-of a bad network connection, the `purchase` function has to keep retrying the
-request. Now, what if in the meantime the user accidentally clicks an "Add to Cart"
-button on an item they don't actually want before the network request begins?
-If that happens and the network request begins, then that purchase function
-will send the accidentally added item because the `cart` array was modified.
+O usuário clica no botão "Comprar", que chama a função `comprar`. Esta faz uma 
+requisição, depois enviando o array `carrinho` para o servidor. Por conta de uma
+má conexão de internet, a função `comprar` tem de continuar enviando a requisição.
+E se, enquanto isso, o usuário acidentalmente clica no botão de "Adicionar ao carrinho"
+em um item que ele não realmente quer antes que a requisição comece?
 
-A great solution would be for the `addItemToCart` function to always clone the 
-`cart`, edit it, and return the clone. This would ensure that functions that are still
-using the old shopping cart wouldn't be affected by the changes.
+Se isso ocorre e a requisição começa, então essa função de compra vai, acidentalmente,
+adicionar o novo item por conta do array `carrinho` ter sido modificado.
 
-Two caveats to mention to this approach:
+Uma boa solução seria se a função `adicionarItemAoCarrinho` sempre clonasse o
+`carrinho`, editasse ele, e retornasse o clone. Isso iria garantir que as funções
+que ainda estivessem usando o carrinho antigo não seriam afetadas pelas mudanças.
 
-1. There might be cases where you actually want to modify the input object,
-   but when you adopt this programming practice you will find that those cases
-   are pretty rare. Most things can be refactored to have no side effects!
+Temos duas ressalvas a se fazer antes de explorar ainda mais essa abordagem:
 
-2. Cloning big objects can be very expensive in terms of performance. Luckily,
-   this isn't a big issue in practice because there are
-   [great libraries](https://facebook.github.io/immutable-js/) that allow
-   this kind of programming approach to be fast and not as memory intensive as
-   it would be for you to manually clone objects and arrays.
+1. Podem haver casos em que você realmente quer modificar o objeto do input,
+   mas, depois que você adotar essa prática de programação, você vai notar que esses casos são bastante raros. A maioria das coisas podem ser refatoradas
+   para não ter efeitos colaterais!
 
-**Bad:**
+2. Clonar grandes objetos pode ser algo bastante caro em termos de perfomance.
+   Por sorte, essa prática não é um grande problema porque existem [ótimas bibliotecas](https://facebook.github.io/immutable-js/)
+   que permitem que esse tipo de programação seja rápido e não consuma tanto 
+   processamento quanto ocorreria se a clonagem de objetos e de arrays fosse feita
+   manualmente.
+
+**Errado:**
 
 ```javascript
-const addItemToCart = (cart, item) => {
-  cart.push({ item, date: Date.now() });
+const adicionarItemAoCarrinho = (carrinho, item) => {
+  carrinho.push({ item, data: Date.now() });
 };
 ```
 
-**Good:**
+**Certo:**
 
 ```javascript
-const addItemToCart = (cart, item) => {
-  return [...cart, { item, date: Date.now() }];
+const adicionarItemAoCarrinho = (carrinho, item) => {
+  return [...carrinho, { item, data: Date.now() }];
 };
 ```
 
 **[⬆ voltar para o topo](#tabela-de-conteúdos)**
 
-### Don't write to global functions
+### Não escreva para funções globais
 
-Polluting globals is a bad practice in JavaScript because you could clash with another
-library and the user of your API would be none-the-wiser until they get an
-exception in production. Let's think about an example: what if you wanted to
-extend JavaScript's native Array method to have a `diff` method that could
-show the difference between two arrays? You could write your new function
-to the `Array.prototype`, but it could clash with another library that tried
-to do the same thing. What if that other library was just using `diff` to find
-the difference between the first and last elements of an array? This is why it
-would be much better to just use ES2015/ES6 classes and simply extend the `Array` global.
+Poluir funções globais é uma má prática em JavaScript porque você poderia 
+atrapalhar o funcionamento de alguma biblioteca e o usuário da API não faria ideia do que
+está acontecendo até que ele encontrasse uma falha na execução.
 
-**Bad:**
+Pensemos em um exemplo: e se você quisesse extender o método nativo Array de JavaScript para
+que ele tivesse um método `diff` que pode mostrar a diferença entre dois arrays? Você poderia
+escrever a sua nova função para o `Array.prototype`, mas ele poderia depois se chocar com uma biblioteca
+que tentasse fazer a mesma coisa.
+
+E se essa outra biblioteca estivesse usando um método `diff` para encontrar a diferença entre apenas o primeiro
+e o último elementos de um array? É por isso que é muito melhor sar as classes do ES2015/ES6 e simplesmente
+extender o `Array` global.
+
+**Errado:**
 
 ```javascript
 Array.prototype.diff = function diff(comparisonArray) {
@@ -714,7 +718,7 @@ Array.prototype.diff = function diff(comparisonArray) {
 };
 ```
 
-**Good:**
+**Certo:**
 
 ```javascript
 class SuperArray extends Array {
@@ -727,13 +731,13 @@ class SuperArray extends Array {
 
 **[⬆ voltar para o topo](#tabela-de-conteúdos)**
 
-### Favor functional programming over imperative programming
+### Prefira programação funcional a imperativa
 
-JavaScript isn't a functional language in the way that Haskell is, but it has
-a functional flavor to it. Functional languages can be cleaner and easier to test.
-Favor this style of programming when you can.
+JavaScript não é uma linguagem funcional como Haskell é, mas ela ainda tem algo de funcional em si.
+Linguagens funcionais normalmente são mais limpas e mais fáceis de se testar. Dê preferência a esse estilo
+de programação sempre que possível.
 
-**Bad:**
+**Errado:**
 
 ```javascript
 const programmerOutput = [
@@ -762,7 +766,7 @@ for (let i = 0; i < programmerOutput.length; i++) {
 }
 ```
 
-**Good:**
+**Certo:**
 
 ```javascript
 const programmerOutput = [
@@ -792,9 +796,13 @@ const totalOutput = programmerOutput.reduce(
 
 **[⬆ voltar para o topo](#tabela-de-conteúdos)**
 
-### Encapsulate conditionals
+### Você deve encapsular condicionais
 
-**Bad:**
+É sempre bom e útil que as suas condicionais estejam encapsuladas dentro de funções.
+Dessa forma, será muito fácil para o leitor entender o seu código, além de permitir reutilizar
+a mesma condicional e facilitar algum ajuste em caso de bugs.
+
+**Errado:**
 
 ```javascript
 if (fsm.state === "fetching" && isEmpty(listNode)) {
@@ -802,7 +810,7 @@ if (fsm.state === "fetching" && isEmpty(listNode)) {
 }
 ```
 
-**Good:**
+**Certo:**
 
 ```javascript
 function shouldShowSpinner(fsm, listNode) {
@@ -816,9 +824,12 @@ if (shouldShowSpinner(fsmInstance, listNodeInstance)) {
 
 **[⬆ voltar para o topo](#tabela-de-conteúdos)**
 
-### Avoid negative conditionals
+### Evite condicionais negativas
 
-**Bad:**
+É sempre confuso de se entender uma condicional que funciona caso o valor de uma expressão
+booleana seja negativo. Evitar usá-las tornará o seu código muito mais simples de se ler.
+
+**Errado:**
 
 ```javascript
 function isDOMNodeNotPresent(node) {
@@ -830,7 +841,7 @@ if (!isDOMNodeNotPresent(node)) {
 }
 ```
 
-**Good:**
+**Certo:**
 
 ```javascript
 function isDOMNodePresent(node) {
@@ -844,21 +855,22 @@ if (isDOMNodePresent(node)) {
 
 **[⬆ voltar para o topo](#tabela-de-conteúdos)**
 
-### Avoid conditionals
+### Evite condicionais
 
-This seems like an impossible task. Upon first hearing this, most people say,
-"how am I supposed to do anything without an `if` statement?" The answer is that
-you can use polymorphism to achieve the same task in many cases. The second
-question is usually, "well that's great but why would I want to do that?" The
-answer is a previous clean code concept we learned: a function should only do
-one thing. When you have classes and functions that have `if` statements, you
-are telling your user that your function does more than one thing. Remember,
-just do one thing.
+Essa parece ser uma tarefa impossível. À primeira vista, muitos vão dizer "como é que eu vou fazer
+algo sem um `if`?" A resposta é que você pode usar polimorfismo para resolver esses problemas, na 
+maioria dos casos.
 
-**Bad:**
+A segunda pergunta, normalmente, é "bem, até aí tudo certo. Mas por que eu faria isso?" A resposta
+é um conceito de clean code que aprendemos antes: uma função só deve fazer uma coisa.
+
+Quando você tem classes e funções que têm `if`, você está dizendo ao usuário que essa função faz
+mais de uma coisa. Lembre-se: faça só uma coisa por vez.
+
+**Errado:**
 
 ```javascript
-class Airplane {
+class Aviao {
   // ...
   getCruisingAltitude() {
     switch (this.type) {
@@ -873,28 +885,28 @@ class Airplane {
 }
 ```
 
-**Good:**
+**Certo:**
 
 ```javascript
-class Airplane {
+class Aviao {
   // ...
 }
 
-class Boeing777 extends Airplane {
+class Boeing777 extends Aviao {
   // ...
   getCruisingAltitude() {
     return this.getMaxAltitude() - this.getPassengerCount();
   }
 }
 
-class AirForceOne extends Airplane {
+class AirForceOne extends Aviao {
   // ...
   getCruisingAltitude() {
     return this.getMaxAltitude();
   }
 }
 
-class Cessna extends Airplane {
+class Cessna extends Aviao {
   // ...
   getCruisingAltitude() {
     return this.getMaxAltitude() - this.getFuelExpenditure();
@@ -904,48 +916,54 @@ class Cessna extends Airplane {
 
 **[⬆ voltar para o topo](#tabela-de-conteúdos)**
 
-### Avoid type-checking (part 1)
+### Evite checar tipos (parte 1)
 
-JavaScript is untyped, which means your functions can take any type of argument.
-Sometimes you are bitten by this freedom and it becomes tempting to do
-type-checking in your functions. There are many ways to avoid having to do this.
-The first thing to consider is consistent APIs.
+JavaScript não é uma linguagem que depende de tipos, o que quer dizer que sua função pode
+receber qualquer tipo de argumento.
 
-**Bad:**
+Às vezes, esse grau de liberdade acaba te prejudicando, e acaba se tornando tentador fazer checagem
+de tipo em suas funções. Existem muitas formas de evitar ter que fazer isso. A primeira a se considerar 
+é APIs consistentes.
+
+**Errado::**
 
 ```javascript
-function travelToTexas(vehicle) {
-  if (vehicle instanceof Bicycle) {
-    vehicle.pedal(this.currentLocation, new Location("texas"));
-  } else if (vehicle instanceof Car) {
-    vehicle.drive(this.currentLocation, new Location("texas"));
+function dirigirParaOTexas(veiculo) {
+  if (veiculo instanceof Bicicleta) {
+    veiculo.pedalar(this.localizacaoAtual, new Localizacao("texas"));
+  } else if (veiculo instanceof Car) {
+    veiculo.dirigir(this.localizacaoAtual, new Localizacao("texas"));
   }
 }
 ```
 
-**Good:**
+**Certo:**
 
 ```javascript
-function travelToTexas(vehicle) {
-  vehicle.move(this.currentLocation, new Location("texas"));
+function travelToTexas(veiculo) {
+  veiculo.mover(this.localizacaoAtual, new Localizacao("texas"));
 }
 ```
 
 **[⬆ voltar para o topo](#tabela-de-conteúdos)**
 
-### Avoid type-checking (part 2)
+### Evite checar tipos (parte 2)
 
-If you are working with basic primitive values like strings and integers,
-and you can't use polymorphism but you still feel the need to type-check,
-you should consider using TypeScript. It is an excellent alternative to normal
-JavaScript, as it provides you with static typing on top of standard JavaScript
-syntax. The problem with manually type-checking normal JavaScript is that
-doing it well requires so much extra verbiage that the faux "type-safety" you get
-doesn't make up for the lost readability. Keep your JavaScript clean, write
-good tests, and have good code reviews. Otherwise, do all of that but with
-TypeScript (which, like I said, is a great alternative!).
+Se você estiver trabalhando com tipos primitivos como strings e integers e, por isso, não pode
+usar polimorfismo, mas ainda assim você acha que precisa fazer checagem de tipos, você talvez 
+deveria usar TypeScript.
 
-**Bad:**
+É uma excelente alternativa para o JavaScript normal, já que ele te dá tipagem estática com uso
+da sintaxe normal do JavaScript.
+
+O problema de fazer a checagem de tipo manualmente no JavaScript normal é que fazê-lo bem feito
+exige tanto código extra que a "segurança de tipo" recebida não compensa a perda de capacidade 
+de leitura do seu código.
+
+Mantenha o seu JavaScript limpo, escreva bons testes, e faça bons reviews no seu código. Ou então
+você pode usar TypeScript no lugar disso tipo (o que, como dito antes, é uma ótima alternativa!).
+
+**Errado:**
 
 ```javascript
 function combine(val1, val2) {
@@ -956,11 +974,11 @@ function combine(val1, val2) {
     return val1 + val2;
   }
 
-  throw new Error("Must be of type String or Number");
+  throw new Error("Deve ser do tipo number ou integer");
 }
 ```
 
-**Good:**
+**Certo:**
 
 ```javascript
 function combine(val1, val2) {
@@ -970,25 +988,27 @@ function combine(val1, val2) {
 
 **[⬆ voltar para o topo](#tabela-de-conteúdos)**
 
-### Don't over-optimize
+### Não tente otimizar demais
 
-Modern browsers do a lot of optimization under-the-hood at runtime. A lot of
-times, if you are optimizing then you are just wasting your time. [There are good
-resources](https://github.com/petkaantonov/bluebird/wiki/Optimization-killers)
-for seeing where optimization is lacking. Target those in the meantime, until
-they are fixed if they can be.
+Navegadores modernos fazem muita otimização debaixo dos panos durante o tempo de execução.
+Muitas das vezes, se você estiver tentando otimizar o seu código, então você está apenas perdendo
+o seu tempo. 
 
-**Bad:**
+[Existem alguns bons recursos](https://github.com/petkaantonov/bluebird/wiki/Optimization-killers)
+para te ajudar a ver onde estiver faltando otimizar algo. Coloque a sua mira neles, até que eles
+sejam consertados, se possível.
+
+**Errado:**
 
 ```javascript
-// On old browsers, each iteration with uncached `list.length` would be costly
-// because of `list.length` recomputation. In modern browsers, this is optimized.
+// Em navegadores antigos, cada iteração de list.length sem cache vai ser custosa por conta da
+// recomputação de `list.length`. Em navegadores modernos, isso já está otimizado.
 for (let i = 0, len = list.length; i < len; i++) {
   // ...
 }
 ```
 
-**Good:**
+**Certo:**
 
 ```javascript
 for (let i = 0; i < list.length; i++) {
@@ -998,13 +1018,13 @@ for (let i = 0; i < list.length; i++) {
 
 **[⬆ voltar para o topo](#tabela-de-conteúdos)**
 
-### Remove dead code
+### Remova código morto
 
-Dead code is just as bad as duplicate code. There's no reason to keep it in
-your codebase. If it's not being called, get rid of it! It will still be safe
-in your version history if you still need it.
+Código morto é tão ruim quanto código duplicado. Não existe motivos para mantê-lo nos seus arquivos.
+Se não estiver sendo usado, se livre! Ele ainda vai estar disponível no seu histórico de versões
+se você precisar dele.
 
-**Bad:**
+**Errado:**
 
 ```javascript
 function oldRequestModule(url) {
@@ -1019,7 +1039,7 @@ const req = newRequestModule;
 inventoryTracker("apples", req, "www.inventory-awesome.io");
 ```
 
-**Good:**
+**Certo:**
 
 ```javascript
 function newRequestModule(url) {
