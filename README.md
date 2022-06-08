@@ -697,17 +697,17 @@ const adicionarItemAoCarrinho = (carrinho, item) => {
 
 ### Não escreva para funções globais
 
-Poluir funções globais é uma má prática em JavaScript porque você poderia 
-atrapalhar o funcionamento de alguma biblioteca e o usuário da API não faria ideia do que
+Poluir o seu código com funções globais é uma má prática em JavaScript porque você pode 
+atrapalhar o funcionamento de alguma biblioteca e o usuário da sua aplicação não faria ideia do que
 está acontecendo até que ele encontrasse uma falha na execução.
 
-Pensemos em um exemplo: e se você quisesse extender o método nativo Array de JavaScript para
-que ele tivesse um método `diff` que pode mostrar a diferença entre dois arrays? Você poderia
-escrever a sua nova função para o `Array.prototype`, mas ele poderia depois se chocar com uma biblioteca
-que tentasse fazer a mesma coisa.
+Pensemos em um exemplo: e se você precisasse extender o método nativo Array de JavaScript para
+que ele tivesse um método `diff` que mostra a diferença entre dois arrays? Você poderia escrever a
+sua nova função para o `Array.prototype`, mas ele poderia depois se chocar com uma biblioteca que
+tentasse fazer a mesma coisa.
 
 E se essa outra biblioteca estivesse usando um método `diff` para encontrar a diferença entre apenas o primeiro
-e o último elementos de um array? É por isso que é muito melhor sar as classes do ES2015/ES6 e simplesmente
+e o último elementos de um array? É por isso que é muito melhor usar as classes do ES2015/ES6 e simplesmente
 extender o `Array` global.
 
 **Errado:**
@@ -734,8 +734,8 @@ class SuperArray extends Array {
 
 ### Prefira programação funcional a imperativa
 
-JavaScript não é uma linguagem funcional como Haskell é, mas ela ainda tem algo de funcional em si.
-Linguagens funcionais normalmente são mais limpas e mais fáceis de se testar. Dê preferência a esse estilo
+JavaScript não é uma linguagem funcional como Haskell é, mas ela, sendo multiparadigmática, ainda tem algo
+de funcional em si. Linguagens funcionais normalmente são mais limpas e mais fáceis de se testar. Dê preferência a esse estilo
 de programação sempre que possível.
 
 **Errado:**
@@ -801,7 +801,7 @@ const totalOutput = programmerOutput.reduce(
 
 É sempre bom e útil que as suas condicionais estejam encapsuladas dentro de funções.
 Dessa forma, será muito fácil para o leitor entender o seu código, além de permitir reutilizar
-a mesma condicional e facilitar algum ajuste em caso de bugs.
+a mesma condicional me outras áreas e facilitar algum ajuste em caso de bugs.
 
 **Errado:**
 
