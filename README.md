@@ -10,7 +10,7 @@ devem ser traduzidos, pois assim distancia a leitura dos nomes que os programado
 1. [Introdução](#introdução)
 2. [Variáveis](#variáveis)
 3. [Funções](#funções)
-4. [Objects and Data Structures](#objects-and-data-structures)
+4. [Objetos e estruturas de dados](#objetos-e-estuturas-de-dados)
 5. [Classes](#classes)
 6. [SOLID](#solid)
 7. [Testing](#testing)
@@ -1053,119 +1053,119 @@ inventoryTracker("apples", req, "www.inventory-awesome.io");
 
 **[⬆ voltar para o topo](#tabela-de-conteúdos)**
 
-## **Objects and Data Structures**
+## **Objetos e estruturas de dados**
 
-### Use getters and setters
+### Use getters e setters
 
-Using getters and setters to access data on objects could be better than simply
-looking for a property on an object. "Why?" you might ask. Well, here's an
-unorganized list of reasons why:
+Usar getters e setters para acessar arquivos em objetos pode ser melhor do que simplesmente procurar
+por uma propriedade de um objeto. "Mas por quê?", você pode se perguntar. Bem, aqui vai uma lista
+de motivos:
 
-- When you want to do more beyond getting an object property, you don't have
-  to look up and change every accessor in your codebase.
-- Makes adding validation simple when doing a `set`.
-- Encapsulates the internal representation.
-- Easy to add logging and error handling when getting and setting.
-- You can lazy load your object's properties, let's say getting it from a
-  server.
+- Quando você quer fazer mais além de pegar uma propriedade de um objeto, você não precisa procurar e mudar
+todos os acessos no seu código base;
+- Validar a entrada de dados novas se torna muito fácil quando você tem uma função `set` coordenando o input;
+- Encapsula a representação interna;
+- É mais fácil de adicionar log e de lidar com erros quando se usa get e set;
+- Você pode fazer lazy load nas propriedades de seu objeto, como, por exemplo, estiver esperando a resposta
+de um servidor.
 
-**Bad:**
+**Errado:**
 
 ```javascript
-function makeBankAccount() {
+function criarContaDoBanco() {
   // ...
 
   return {
-    balance: 0
+    saldo: 0
     // ...
   };
 }
 
-const account = makeBankAccount();
-account.balance = 100;
+const conta = criarContaDoBanco();
+conta.saldo = 100;
 ```
 
-**Good:**
+**Certo:**
 
 ```javascript
-function makeBankAccount() {
-  // this one is private
-  let balance = 0;
+function criarContaDoBanco() {
+  // este dado é privado
+  let saldo = 0;
 
-  // a "getter", made public via the returned object below
-  function getBalance() {
-    return balance;
+  // um "getter", feito público com o objeto retornado abaixo
+  function getSaldo() {
+    return saldo;
   }
 
-  // a "setter", made public via the returned object below
-  function setBalance(amount) {
-    // ... validate before updating the balance
-    balance = amount;
+  // um "setter", feito público com o objeto retornado abaixo
+  function setBalance(quantia) {
+    // ... aqui, você pode programar uma validação antes de atualizar o saldo
+    saldo = quantia;
   }
 
   return {
     // ...
-    getBalance,
-    setBalance
+    getSaldo,
+    setSaldo
   };
 }
 
-const account = makeBankAccount();
-account.setBalance(100);
+const conta = criarContaDoBanco();
+conta.setSaldo(100);
 ```
 
 **[⬆ voltar para o topo](#tabela-de-conteúdos)**
 
-### Make objects have private members
+### Faça com que objetos tenha membros privados
 
-This can be accomplished through closures (for ES5 and below).
+Isso pode ser feito com closures (para ES5 ou menos).
 
-**Bad:**
+**Errado:**
 
 ```javascript
-const empregado = function(name) {
-  this.name = name;
+const empregado = function(nome) {
+  this.nome = nome;
 };
 
 empregado.prototype.getName = function getName() {
-  return this.name;
+  return this.nome;
 };
 
 const empregado = new empregado("John Doe");
-console.log(`empregado name: ${empregado.getName()}`); // empregado name: John Doe
-delete empregado.name;
-console.log(`empregado name: ${empregado.getName()}`); // empregado name: undefined
+console.log(`nome do empregado: ${empregado.getName()}`); // nome do empregado: John Doe
+delete empregado.nome;
+console.log(`nome do empregado: ${empregado.getName()}`); // nome do empregado: undefined
 ```
 
-**Good:**
+**Certo:**
 
 ```javascript
-function makeempregado(name) {
+function criarEmpregado(nome) {
   return {
-    getName() {
-      return name;
+    getNome() {
+      return nome;
     }
   };
 }
 
-const empregado = makeempregado("John Doe");
-console.log(`empregado name: ${empregado.getName()}`); // empregado name: John Doe
-delete empregado.name;
-console.log(`empregado name: ${empregado.getName()}`); // empregado name: John Doe
+const empregado = criarEmpregado("John Doe");
+console.log(`nome do empregado: ${empregado.getNome()}`); // nome do empregado: John Doe
+delete empregado.nome;
+console.log(`nome do empregado: ${empregado.getNome()}`); // nome do empregado: John Doe
 ```
 
 **[⬆ voltar para o topo](#tabela-de-conteúdos)**
 
 ## **Classes**
 
-### Prefer ES2015/ES6 classes over ES5 plain functions
+### Prefira classes do ES2015/ES6 às funções simples do ES5
 
-It's very difficult to get readable class inheritance, construction, and method
-definitions for classical ES5 classes. If you need inheritance (and be aware
-that you might not), then prefer ES2015/ES6 classes. However, prefer small functions over
-classes until you find yourself needing larger and more complex objects.
+É muito difícil fazer herança entre classes, construções e definições de métodos de forma legível com 
+as classes normais do ES5. 
 
-**Bad:**
+Se você precisar de herança (e saiba que talvez você não precise mesmo), então prefira classes do ES2015/ES6. No entanto, prefira funções pequenas às classes até que você perceba que precisa objetos maiores e mais complexos.
+
+**Errado:**
 
 ```javascript
 const Animal = function(age) {
@@ -1205,7 +1205,7 @@ Human.prototype.constructor = Human;
 Human.prototype.speak = function speak() {};
 ```
 
-**Good:**
+**Certo:**
 
 ```javascript
 class Animal {
@@ -1243,13 +1243,13 @@ class Human extends Mammal {
 
 **[⬆ voltar para o topo](#tabela-de-conteúdos)**
 
-### Use method chaining
+### Use encadeamento de métodos
 
-This pattern is very useful in JavaScript and you see it in many libraries such
-as jQuery and Lodash. It allows your code to be expressive, and less verbose.
-For that reason, I say, use method chaining and take a look at how clean your code
-will be. In your class functions, simply return `this` at the end of every function,
-and you can chain further class methods onto it.
+Esse pattern é muito útil em JavaScript e você o vê sendo
+usado em muitas bibliotecas como jQuery e Lodash. Isso permite que o seu código seja expressivo e menos verboso.
+
+Por isso, eu digo, use o encadeamento de métodos e veja o quão limpo o seu código vai ficar. Nas funções da sua classe,
+simplesmente retorne `this` ao final de toda função, e você poderá então encadear mais métodos de classe depois.
 
 **Bad:**
 
@@ -1323,7 +1323,9 @@ const car = new Car("Ford", "F-150", "red").setColor("pink").save();
 
 **[⬆ voltar para o topo](#tabela-de-conteúdos)**
 
-### Prefer composition over inheritance
+### Prefira composiçõe a herança
+
+
 
 As stated famously in [_Design Patterns_](https://en.wikipedia.org/wiki/Design_Patterns) by the Gang of Four,
 you should prefer composition over inheritance where you can. There are lots of
