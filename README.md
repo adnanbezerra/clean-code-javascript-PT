@@ -10,7 +10,7 @@ devem ser traduzidos, pois assim distancia a leitura dos nomes que os programado
 1. [Introdução](#introdução)
 2. [Variáveis](#variáveis)
 3. [Funções](#funções)
-4. [Objetos e estruturas de dados](#objetos-e-estuturas-de-dados)
+4. [Objetos e estruturas de dados](#objetos-e-estruturas-de-dados)
 5. [Classes](#classes)
 6. [SOLID](#solid)
 7. [Testing](#testing)
